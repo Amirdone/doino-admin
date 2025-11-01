@@ -16,7 +16,7 @@ const table = useTemplateRef("table");
 
 const columnFilters = ref([
   {
-    id: "email",
+    id: "phone",
     value: "",
   },
 ]);
@@ -63,11 +63,20 @@ const data = computed(() => {
   );
 });
 
+const editingUser = ref<User | null>(null);
+
 function getRowItems(row: Row<User>) {
   return [
     {
       type: "label",
       label: "عملیات‌ها",
+    },
+    {
+      label: "ویرایش کاربر",
+      icon: "i-lucide-pencil",
+      onSelect() {
+        editingUser.value = row.original;
+      },
     },
     {
       label: "کپی شناسه کاربر",
@@ -149,14 +158,14 @@ const columns: TableColumn<User>[] = [
     },
   },
   {
-    accessorKey: "email",
+    accessorKey: "phone",
     header: ({ column }) => {
       const isSorted = column.getIsSorted();
 
       return h(UButton, {
         color: "neutral",
         variant: "ghost",
-        label: "ایمیل",
+        label: "تلفن",
         icon: isSorted
           ? isSorted === "asc"
             ? "i-lucide-arrow-up-narrow-wide"
@@ -166,6 +175,8 @@ const columns: TableColumn<User>[] = [
         onClick: () => column.toggleSorting(column.getIsSorted() === "asc"),
       });
     },
+    cell: ({ row }) =>
+      h("div", { dir: "ltr", class: "text-right" }, row.original.phone),
   },
   {
     accessorKey: "location",
@@ -295,12 +306,12 @@ const pagination = ref({
     <template #body>
       <div class="flex flex-wrap items-center justify-between gap-1.5">
         <UInput
-          :model-value="(table?.tableApi?.getColumn('email')?.getFilterValue() as string)"
+          :model-value="(table?.tableApi?.getColumn('phone')?.getFilterValue() as string)"
           class="max-w-sm"
           icon="i-lucide-search"
-          placeholder="جستجو در ایمیل‌ها..."
+          placeholder="جستجو در شماره تلفن‌ها..."
           @update:model-value="
-            table?.tableApi?.getColumn('email')?.setFilterValue($event)
+            table?.tableApi?.getColumn('phone')?.setFilterValue($event)
           "
         />
 
@@ -396,9 +407,7 @@ const pagination = ref({
         class="flex items-center justify-between gap-3 border-t border-default pt-4 mt-auto"
       >
         <div class="text-sm text-muted">
-          {{
-            table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0
-          }}
+          {{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }}
           از {{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} ردیف
           انتخاب شده.
         </div>
@@ -416,4 +425,6 @@ const pagination = ref({
       </div>
     </template>
   </UDashboardPanel>
+
+  <CustomersEditModal :user="editingUser" @close="editingUser = null" />
 </template>

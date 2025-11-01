@@ -4,7 +4,7 @@ import type { FormSubmitEvent } from "@nuxt/ui";
 
 const schema = z.object({
   name: z.string().min(2, "نام باید حداقل ۲ کاراکتر باشد"),
-  email: z.string().email("آدرس ایمیل نامعتبر است"),
+  phone: z.string().min(10, "شماره تلفن باید حداقل ۱۰ رقم باشد"),
 });
 const open = ref(false);
 
@@ -12,7 +12,7 @@ type Schema = z.output<typeof schema>;
 
 const state = reactive<Partial<Schema>>({
   name: undefined,
-  email: undefined,
+  phone: undefined,
 });
 
 const toast = useToast();
@@ -49,12 +49,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           >
             <UInput v-model="state.name" class="w-full" />
           </UFormField>
-          <UFormField
-            label="آدرس ایمیل"
-            placeholder="ali@example.com"
-            name="email"
-          >
-            <UInput v-model="state.email" class="w-full" />
+          <UFormField label="شماره تلفن" placeholder="09123456789" name="phone">
+            <UInput v-model="state.phone" class="w-full" type="tel" dir="ltr" />
           </UFormField>
           <div class="flex justify-end gap-2">
             <UButton

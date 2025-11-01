@@ -5,6 +5,7 @@ const customers: User[] = [
     id: 1,
     name: "Alex Smith",
     email: "alex.smith@example.com",
+    phone: "09121234567",
     avatar: {
       src: "https://i.pravatar.cc/128?u=1",
     },
@@ -16,6 +17,7 @@ const customers: User[] = [
     id: 2,
     name: "Jordan Brown",
     email: "jordan.brown@example.com",
+    phone: "09121234568",
     avatar: {
       src: "https://i.pravatar.cc/128?u=2",
     },
@@ -27,6 +29,7 @@ const customers: User[] = [
     id: 3,
     name: "Taylor Green",
     email: "taylor.green@example.com",
+    phone: "09121234569",
     avatar: {
       src: "https://i.pravatar.cc/128?u=3",
     },
@@ -38,6 +41,7 @@ const customers: User[] = [
     id: 4,
     name: "Morgan White",
     email: "morgan.white@example.com",
+    phone: "09121234570",
     avatar: {
       src: "https://i.pravatar.cc/128?u=4",
     },
@@ -49,6 +53,7 @@ const customers: User[] = [
     id: 5,
     name: "Casey Gray",
     email: "casey.gray@example.com",
+    phone: "09121234571",
     avatar: {
       src: "https://i.pravatar.cc/128?u=5",
     },
@@ -60,6 +65,7 @@ const customers: User[] = [
     id: 6,
     name: "Jamie Johnson",
     email: "jamie.johnson@example.com",
+    phone: "09121234572",
     avatar: {
       src: "https://i.pravatar.cc/128?u=6",
     },
@@ -71,6 +77,7 @@ const customers: User[] = [
     id: 7,
     name: "Riley Davis",
     email: "riley.davis@example.com",
+    phone: "09121234573",
     avatar: {
       src: "https://i.pravatar.cc/128?u=7",
     },
@@ -82,6 +89,7 @@ const customers: User[] = [
     id: 8,
     name: "Kelly Wilson",
     email: "kelly.wilson@example.com",
+    phone: "09121234574",
     avatar: {
       src: "https://i.pravatar.cc/128?u=8",
     },
@@ -93,6 +101,7 @@ const customers: User[] = [
     id: 9,
     name: "Drew Moore",
     email: "drew.moore@example.com",
+    phone: "09121234575",
     avatar: {
       src: "https://i.pravatar.cc/128?u=9",
     },
@@ -104,6 +113,7 @@ const customers: User[] = [
     id: 10,
     name: "Jordan Taylor",
     email: "jordan.taylor@example.com",
+    phone: "09121234576",
     avatar: {
       src: "https://i.pravatar.cc/128?u=10",
     },
@@ -115,6 +125,7 @@ const customers: User[] = [
     id: 11,
     name: "Morgan Anderson",
     email: "morgan.anderson@example.com",
+    phone: "09121234577",
     avatar: {
       src: "https://i.pravatar.cc/128?u=11",
     },
@@ -126,6 +137,7 @@ const customers: User[] = [
     id: 12,
     name: "Casey Thomas",
     email: "casey.thomas@example.com",
+    phone: "09121234578",
     avatar: {
       src: "https://i.pravatar.cc/128?u=12",
     },
@@ -137,6 +149,7 @@ const customers: User[] = [
     id: 13,
     name: "Jamie Jackson",
     email: "jamie.jackson@example.com",
+    phone: "09121234579",
     avatar: {
       src: "https://i.pravatar.cc/128?u=13",
     },
@@ -148,6 +161,7 @@ const customers: User[] = [
     id: 14,
     name: "Riley White",
     email: "riley.white@example.com",
+    phone: "09121234580",
     avatar: {
       src: "https://i.pravatar.cc/128?u=14",
     },
@@ -159,6 +173,7 @@ const customers: User[] = [
     id: 15,
     name: "Kelly Harris",
     email: "kelly.harris@example.com",
+    phone: "09121234581",
     avatar: {
       src: "https://i.pravatar.cc/128?u=15",
     },
@@ -170,6 +185,7 @@ const customers: User[] = [
     id: 16,
     name: "Drew Martin",
     email: "drew.martin@example.com",
+    phone: "09121234582",
     avatar: {
       src: "https://i.pravatar.cc/128?u=16",
     },
@@ -181,6 +197,7 @@ const customers: User[] = [
     id: 17,
     name: "Alex Thompson",
     email: "alex.thompson@example.com",
+    phone: "09121234583",
     avatar: {
       src: "https://i.pravatar.cc/128?u=17",
     },
@@ -192,6 +209,7 @@ const customers: User[] = [
     id: 18,
     name: "Jordan Garcia",
     email: "jordan.garcia@example.com",
+    phone: "09121234584",
     avatar: {
       src: "https://i.pravatar.cc/128?u=18",
     },
@@ -203,6 +221,7 @@ const customers: User[] = [
     id: 19,
     name: "Taylor Rodriguez",
     email: "taylor.rodriguez@example.com",
+    phone: "09121234585",
     avatar: {
       src: "https://i.pravatar.cc/128?u=19",
     },
@@ -214,6 +233,7 @@ const customers: User[] = [
     id: 20,
     name: "Morgan Lopez",
     email: "morgan.lopez@example.com",
+    phone: "09121234586",
     avatar: {
       src: "https://i.pravatar.cc/128?u=20",
     },

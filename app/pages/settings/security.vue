@@ -63,7 +63,7 @@ const validate = (state: Partial<PasswordSchema>): FormError[] => {
   <UPageCard
     title="حذف حساب کاربری"
     description="دیگر نمی‌خواهید از خدمات ما استفاده کنید؟ می‌توانید حساب کاربری خود را از اینجا حذف کنید. توجه داشته باشید که این عملیات غیرقابل بازگشت است و تمام اطلاعات مرتبط با این حساب به طور دائم حذف خواهند شد."
-    class="bg-gradient-to-tl from-error/10 from-5% to-default"
+    class="bg-linear-to-tl from-error/10 from-5% to-default"
   >
     <template #footer>
       <UButton label="حذف حساب کاربری" color="error" />
