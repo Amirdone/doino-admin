@@ -1,32 +1,35 @@
 <script setup lang="ts">
-import * as z from 'zod'
-import type { FormError } from '@nuxt/ui'
+import * as z from "zod";
+import type { FormError } from "@nuxt/ui";
 
 const passwordSchema = z.object({
-  current: z.string().min(8, 'Must be at least 8 characters'),
-  new: z.string().min(8, 'Must be at least 8 characters')
-})
+  current: z.string().min(8, "رمز عبور باید حداقل ۸ کاراکتر باشد"),
+  new: z.string().min(8, "رمز عبور باید حداقل ۸ کاراکتر باشد"),
+});
 
-type PasswordSchema = z.output<typeof passwordSchema>
+type PasswordSchema = z.output<typeof passwordSchema>;
 
 const password = reactive<Partial<PasswordSchema>>({
   current: undefined,
-  new: undefined
-})
+  new: undefined,
+});
 
 const validate = (state: Partial<PasswordSchema>): FormError[] => {
-  const errors: FormError[] = []
+  const errors: FormError[] = [];
   if (state.current && state.new && state.current === state.new) {
-    errors.push({ name: 'new', message: 'Passwords must be different' })
+    errors.push({
+      name: "new",
+      message: "رمز عبور جدید باید با رمز فعلی متفاوت باشد",
+    });
   }
-  return errors
-}
+  return errors;
+};
 </script>
 
 <template>
   <UPageCard
-    title="Password"
-    description="Confirm your current password before setting a new one."
+    title="تغییر رمز عبور"
+    description="برای تنظیم رمز عبور جدید، ابتدا رمز فعلی خود را تأیید کنید."
     variant="subtle"
   >
     <UForm
@@ -39,7 +42,7 @@ const validate = (state: Partial<PasswordSchema>): FormError[] => {
         <UInput
           v-model="password.current"
           type="password"
-          placeholder="Current password"
+          placeholder="رمز عبور فعلی"
           class="w-full"
         />
       </UFormField>
@@ -48,22 +51,22 @@ const validate = (state: Partial<PasswordSchema>): FormError[] => {
         <UInput
           v-model="password.new"
           type="password"
-          placeholder="New password"
+          placeholder="رمز عبور جدید"
           class="w-full"
         />
       </UFormField>
 
-      <UButton label="Update" class="w-fit" type="submit" />
+      <UButton label="به‌روزرسانی رمز عبور" class="w-fit" type="submit" />
     </UForm>
   </UPageCard>
 
   <UPageCard
-    title="Account"
-    description="No longer want to use our service? You can delete your account here. This action is not reversible. All information related to this account will be deleted permanently."
+    title="حذف حساب کاربری"
+    description="دیگر نمی‌خواهید از خدمات ما استفاده کنید؟ می‌توانید حساب کاربری خود را از اینجا حذف کنید. توجه داشته باشید که این عملیات غیرقابل بازگشت است و تمام اطلاعات مرتبط با این حساب به طور دائم حذف خواهند شد."
     class="bg-gradient-to-tl from-error/10 from-5% to-default"
   >
     <template #footer>
-      <UButton label="Delete account" color="error" />
+      <UButton label="حذف حساب کاربری" color="error" />
     </template>
   </UPageCard>
 </template>

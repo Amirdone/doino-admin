@@ -4,42 +4,53 @@ const state = reactive<{ [key: string]: boolean }>({
   desktop: false,
   product_updates: true,
   weekly_digest: false,
-  important_updates: true
-})
+  important_updates: true,
+});
 
-const sections = [{
-  title: 'Notification channels',
-  description: 'Where can we notify you?',
-  fields: [{
-    name: 'email',
-    label: 'Email',
-    description: 'Receive a daily email digest.'
-  }, {
-    name: 'desktop',
-    label: 'Desktop',
-    description: 'Receive desktop notifications.'
-  }]
-}, {
-  title: 'Account updates',
-  description: 'Receive updates about Nuxt UI.',
-  fields: [{
-    name: 'weekly_digest',
-    label: 'Weekly digest',
-    description: 'Receive a weekly digest of news.'
-  }, {
-    name: 'product_updates',
-    label: 'Product updates',
-    description: 'Receive a monthly email with all new features and updates.'
-  }, {
-    name: 'important_updates',
-    label: 'Important updates',
-    description: 'Receive emails about important updates like security fixes, maintenance, etc.'
-  }]
-}]
+const sections = [
+  {
+    title: "کانال‌های اطلاع‌رسانی",
+    description: "از چه طریقی می‌خواهید اطلاع‌رسانی دریافت کنید؟",
+    fields: [
+      {
+        name: "email",
+        label: "پست الکترونیک",
+        description: "دریافت خلاصه‌ای روزانه از طریق ایمیل.",
+      },
+      {
+        name: "desktop",
+        label: "اعلان مرورگر",
+        description: "نمایش اعلان‌ها در محیط مرورگر.",
+      },
+    ],
+  },
+  {
+    title: "به‌روزرسانی‌های حساب کاربری",
+    description: "دریافت اخبار و به‌روزرسانی‌های سیستم.",
+    fields: [
+      {
+        name: "weekly_digest",
+        label: "گزارش هفتگی",
+        description: "دریافت خلاصه‌ای از اخبار هر هفته.",
+      },
+      {
+        name: "product_updates",
+        label: "به‌روزرسانی‌های سیستم",
+        description: "اطلاع از ویژگی‌های جدید و بهبودهای سیستم به صورت ماهانه.",
+      },
+      {
+        name: "important_updates",
+        label: "اطلاع‌رسانی‌های مهم",
+        description:
+          "اطلاع از به‌روزرسانی‌های حیاتی از جمله وصله‌های امنیتی و تعمیر و نگهداری.",
+      },
+    ],
+  },
+];
 
 async function onChange() {
   // Do something with data
-  console.log(state)
+  console.log(state);
 }
 </script>
 
@@ -61,10 +72,7 @@ async function onChange() {
         :description="field.description"
         class="flex items-center justify-between not-last:pb-4 gap-2"
       >
-        <USwitch
-          v-model="state[field.name]"
-          @update:model-value="onChange"
-        />
+        <USwitch v-model="state[field.name]" @update:model-value="onChange" />
       </UFormField>
     </UPageCard>
   </div>

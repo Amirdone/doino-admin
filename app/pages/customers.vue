@@ -1,206 +1,276 @@
 <script setup lang="ts">
-import type { TableColumn } from '@nuxt/ui'
-import { upperFirst } from 'scule'
-import { getPaginationRowModel } from '@tanstack/table-core'
-import type { Row } from '@tanstack/table-core'
-import type { User } from '~/types'
+import type { TableColumn } from "@nuxt/ui";
+import { upperFirst } from "scule";
+import { getPaginationRowModel } from "@tanstack/table-core";
+import type { Row } from "@tanstack/table-core";
+import type { User, UserRole } from "~/types";
 
-const UAvatar = resolveComponent('UAvatar')
-const UButton = resolveComponent('UButton')
-const UBadge = resolveComponent('UBadge')
-const UDropdownMenu = resolveComponent('UDropdownMenu')
-const UCheckbox = resolveComponent('UCheckbox')
+const UAvatar = resolveComponent("UAvatar");
+const UButton = resolveComponent("UButton");
+const UBadge = resolveComponent("UBadge");
+const UDropdownMenu = resolveComponent("UDropdownMenu");
+const UCheckbox = resolveComponent("UCheckbox");
 
-const toast = useToast()
-const table = useTemplateRef('table')
+const toast = useToast();
+const table = useTemplateRef("table");
 
-const columnFilters = ref([{
-  id: 'email',
-  value: ''
-}])
-const columnVisibility = ref()
-const rowSelection = ref({ 1: true })
+const columnFilters = ref([
+  {
+    id: "email",
+    value: "",
+  },
+]);
+const columnVisibility = ref();
+const rowSelection = ref({ 1: true });
 
-const { data, status } = await useFetch<User[]>('/api/customers', {
-  lazy: true
-})
+const { data: allCustomers, status } = await useFetch<User[]>(
+  "/api/customers",
+  {
+    lazy: true,
+  }
+);
+
+// User role tabs
+const selectedRole = ref<"all" | UserRole>("all");
+const roleTabItems = [
+  {
+    label: "همه کاربران",
+    value: "all",
+  },
+  {
+    label: "مدیران",
+    value: "admin",
+    icon: "i-lucide-shield",
+  },
+  {
+    label: "مشاوران",
+    value: "advisor",
+    icon: "i-lucide-user-cog",
+  },
+  {
+    label: "دانشجویان",
+    value: "student",
+    icon: "i-lucide-graduation-cap",
+  },
+];
+
+// Filter customers by role
+const data = computed(() => {
+  if (!allCustomers.value) return [];
+  if (selectedRole.value === "all") return allCustomers.value;
+  return allCustomers.value.filter(
+    (customer) => customer.role === selectedRole.value
+  );
+});
 
 function getRowItems(row: Row<User>) {
   return [
     {
-      type: 'label',
-      label: 'Actions'
+      type: "label",
+      label: "عملیات‌ها",
     },
     {
-      label: 'Copy customer ID',
-      icon: 'i-lucide-copy',
+      label: "کپی شناسه کاربر",
+      icon: "i-lucide-copy",
       onSelect() {
-        navigator.clipboard.writeText(row.original.id.toString())
+        navigator.clipboard.writeText(row.original.id.toString());
         toast.add({
-          title: 'Copied to clipboard',
-          description: 'Customer ID copied to clipboard'
-        })
-      }
+          title: "کپی شد",
+          description: "شناسه کاربر در کلیپ‌بورد کپی شد",
+        });
+      },
     },
     {
-      type: 'separator'
+      type: "separator",
     },
     {
-      label: 'View customer details',
-      icon: 'i-lucide-list'
+      label: "مشاهده جزئیات کاربر",
+      icon: "i-lucide-list",
     },
     {
-      label: 'View customer payments',
-      icon: 'i-lucide-wallet'
+      label: "مشاهده پرداخت‌های کاربر",
+      icon: "i-lucide-wallet",
     },
     {
-      type: 'separator'
+      type: "separator",
     },
     {
-      label: 'Delete customer',
-      icon: 'i-lucide-trash',
-      color: 'error',
+      label: "حذف کاربر",
+      icon: "i-lucide-trash",
+      color: "error",
       onSelect() {
         toast.add({
-          title: 'Customer deleted',
-          description: 'The customer has been deleted.'
-        })
-      }
-    }
-  ]
+          title: "کاربر حذف شد",
+          description: "کاربر با موفقیت حذف شد.",
+        });
+      },
+    },
+  ];
 }
 
 const columns: TableColumn<User>[] = [
   {
-    id: 'select',
+    id: "select",
     header: ({ table }) =>
       h(UCheckbox, {
-        'modelValue': table.getIsSomePageRowsSelected()
-          ? 'indeterminate'
+        modelValue: table.getIsSomePageRowsSelected()
+          ? "indeterminate"
           : table.getIsAllPageRowsSelected(),
-        'onUpdate:modelValue': (value: boolean | 'indeterminate') =>
+        "onUpdate:modelValue": (value: boolean | "indeterminate") =>
           table.toggleAllPageRowsSelected(!!value),
-        'ariaLabel': 'Select all'
+        ariaLabel: "Select all",
       }),
     cell: ({ row }) =>
       h(UCheckbox, {
-        'modelValue': row.getIsSelected(),
-        'onUpdate:modelValue': (value: boolean | 'indeterminate') => row.toggleSelected(!!value),
-        'ariaLabel': 'Select row'
-      })
+        modelValue: row.getIsSelected(),
+        "onUpdate:modelValue": (value: boolean | "indeterminate") =>
+          row.toggleSelected(!!value),
+        ariaLabel: "Select row",
+      }),
   },
   {
-    accessorKey: 'id',
-    header: 'ID'
+    accessorKey: "id",
+    header: "ID",
   },
   {
-    accessorKey: 'name',
-    header: 'Name',
+    accessorKey: "name",
+    header: "نام",
     cell: ({ row }) => {
-      return h('div', { class: 'flex items-center gap-3' }, [
+      return h("div", { class: "flex items-center gap-3" }, [
         h(UAvatar, {
           ...row.original.avatar,
-          size: 'lg'
+          size: "lg",
         }),
-        h('div', undefined, [
-          h('p', { class: 'font-medium text-highlighted' }, row.original.name),
-          h('p', { class: '' }, `@${row.original.name}`)
-        ])
-      ])
-    }
+        h("div", undefined, [
+          h("p", { class: "font-medium text-highlighted" }, row.original.name),
+          h("p", { class: "" }, `@${row.original.name}`),
+        ]),
+      ]);
+    },
   },
   {
-    accessorKey: 'email',
+    accessorKey: "email",
     header: ({ column }) => {
-      const isSorted = column.getIsSorted()
+      const isSorted = column.getIsSorted();
 
       return h(UButton, {
-        color: 'neutral',
-        variant: 'ghost',
-        label: 'Email',
+        color: "neutral",
+        variant: "ghost",
+        label: "ایمیل",
         icon: isSorted
-          ? isSorted === 'asc'
-            ? 'i-lucide-arrow-up-narrow-wide'
-            : 'i-lucide-arrow-down-wide-narrow'
-          : 'i-lucide-arrow-up-down',
-        class: '-mx-2.5',
-        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
-      })
-    }
+          ? isSorted === "asc"
+            ? "i-lucide-arrow-up-narrow-wide"
+            : "i-lucide-arrow-down-wide-narrow"
+          : "i-lucide-arrow-up-down",
+        class: "-mx-2.5",
+        onClick: () => column.toggleSorting(column.getIsSorted() === "asc"),
+      });
+    },
   },
   {
-    accessorKey: 'location',
-    header: 'Location',
-    cell: ({ row }) => row.original.location
+    accessorKey: "location",
+    header: "موقعیت",
+    cell: ({ row }) => row.original.location,
   },
   {
-    accessorKey: 'status',
-    header: 'Status',
-    filterFn: 'equals',
+    accessorKey: "role",
+    header: "نقش",
+    filterFn: "equals",
+    cell: ({ row }) => {
+      const roleLabels = {
+        admin: "مدیر",
+        advisor: "مشاور",
+        student: "دانشجو",
+      };
+      const roleColors = {
+        admin: "error" as const,
+        advisor: "primary" as const,
+        student: "info" as const,
+      };
+
+      return h(
+        UBadge,
+        {
+          variant: "subtle",
+          color: roleColors[row.original.role],
+        },
+        () => roleLabels[row.original.role]
+      );
+    },
+  },
+  {
+    accessorKey: "status",
+    header: "وضعیت",
+    filterFn: "equals",
     cell: ({ row }) => {
       const color = {
-        subscribed: 'success' as const,
-        unsubscribed: 'error' as const,
-        bounced: 'warning' as const
-      }[row.original.status]
+        subscribed: "success" as const,
+        unsubscribed: "error" as const,
+        bounced: "warning" as const,
+      }[row.original.status];
 
-      return h(UBadge, { class: 'capitalize', variant: 'subtle', color }, () =>
-        row.original.status
-      )
-    }
+      return h(
+        UBadge,
+        { class: "capitalize", variant: "subtle", color },
+        () => row.original.status
+      );
+    },
   },
   {
-    id: 'actions',
+    id: "actions",
     cell: ({ row }) => {
       return h(
-        'div',
-        { class: 'text-right' },
+        "div",
+        { class: "text-right" },
         h(
           UDropdownMenu,
           {
             content: {
-              align: 'end'
+              align: "end",
             },
-            items: getRowItems(row)
+            items: getRowItems(row),
           },
           () =>
             h(UButton, {
-              icon: 'i-lucide-ellipsis-vertical',
-              color: 'neutral',
-              variant: 'ghost',
-              class: 'ml-auto'
+              icon: "i-lucide-ellipsis-vertical",
+              color: "neutral",
+              variant: "ghost",
+              class: "ml-auto",
             })
         )
-      )
+      );
+    },
+  },
+];
+
+const statusFilter = ref("all");
+
+watch(
+  () => statusFilter.value,
+  (newVal) => {
+    if (!table?.value?.tableApi) return;
+
+    const statusColumn = table.value.tableApi.getColumn("status");
+    if (!statusColumn) return;
+
+    if (newVal === "all") {
+      statusColumn.setFilterValue(undefined);
+    } else {
+      statusColumn.setFilterValue(newVal);
     }
   }
-]
-
-const statusFilter = ref('all')
-
-watch(() => statusFilter.value, (newVal) => {
-  if (!table?.value?.tableApi) return
-
-  const statusColumn = table.value.tableApi.getColumn('status')
-  if (!statusColumn) return
-
-  if (newVal === 'all') {
-    statusColumn.setFilterValue(undefined)
-  } else {
-    statusColumn.setFilterValue(newVal)
-  }
-})
+);
 
 const pagination = ref({
   pageIndex: 0,
-  pageSize: 10
-})
+  pageSize: 10,
+});
 </script>
 
 <template>
   <UDashboardPanel id="customers">
     <template #header>
-      <UDashboardNavbar title="Customers">
+      <UDashboardNavbar title="کاربران">
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
@@ -209,6 +279,17 @@ const pagination = ref({
           <CustomersAddModal />
         </template>
       </UDashboardNavbar>
+
+      <UDashboardToolbar>
+        <template #left>
+          <UTabs
+            v-model="selectedRole"
+            :items="roleTabItems"
+            :content="false"
+            class="w-full"
+          />
+        </template>
+      </UDashboardToolbar>
     </template>
 
     <template #body>
@@ -217,22 +298,28 @@ const pagination = ref({
           :model-value="(table?.tableApi?.getColumn('email')?.getFilterValue() as string)"
           class="max-w-sm"
           icon="i-lucide-search"
-          placeholder="Filter emails..."
-          @update:model-value="table?.tableApi?.getColumn('email')?.setFilterValue($event)"
+          placeholder="جستجو در ایمیل‌ها..."
+          @update:model-value="
+            table?.tableApi?.getColumn('email')?.setFilterValue($event)
+          "
         />
 
         <div class="flex flex-wrap items-center gap-1.5">
-          <CustomersDeleteModal :count="table?.tableApi?.getFilteredSelectedRowModel().rows.length">
+          <CustomersDeleteModal
+            :count="table?.tableApi?.getFilteredSelectedRowModel().rows.length"
+          >
             <UButton
               v-if="table?.tableApi?.getFilteredSelectedRowModel().rows.length"
-              label="Delete"
+              label="حذف"
               color="error"
               variant="subtle"
               icon="i-lucide-trash"
             >
               <template #trailing>
                 <UKbd>
-                  {{ table?.tableApi?.getFilteredSelectedRowModel().rows.length }}
+                  {{
+                    table?.tableApi?.getFilteredSelectedRowModel().rows.length
+                  }}
                 </UKbd>
               </template>
             </UButton>
@@ -241,13 +328,16 @@ const pagination = ref({
           <USelect
             v-model="statusFilter"
             :items="[
-              { label: 'All', value: 'all' },
-              { label: 'Subscribed', value: 'subscribed' },
-              { label: 'Unsubscribed', value: 'unsubscribed' },
-              { label: 'Bounced', value: 'bounced' }
+              { label: 'همه', value: 'all' },
+              { label: 'فعال', value: 'subscribed' },
+              { label: 'غیرفعال', value: 'unsubscribed' },
+              { label: 'مسدود شده', value: 'bounced' },
             ]"
-            :ui="{ trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200' }"
-            placeholder="Filter status"
+            :ui="{
+              trailingIcon:
+                'group-data-[state=open]:rotate-180 transition-transform duration-200',
+            }"
+            placeholder="فیلتر بر اساس وضعیت"
             class="min-w-28"
           />
           <UDropdownMenu
@@ -270,7 +360,7 @@ const pagination = ref({
             :content="{ align: 'end' }"
           >
             <UButton
-              label="Display"
+              label="نمایش"
               color="neutral"
               variant="outline"
               trailing-icon="i-lucide-settings-2"
@@ -286,7 +376,7 @@ const pagination = ref({
         v-model:row-selection="rowSelection"
         v-model:pagination="pagination"
         :pagination-options="{
-          getPaginationRowModel: getPaginationRowModel()
+          getPaginationRowModel: getPaginationRowModel(),
         }"
         class="shrink-0"
         :data="data"
@@ -298,19 +388,26 @@ const pagination = ref({
           tbody: '[&>tr]:last:[&>td]:border-b-0',
           th: 'py-2 first:rounded-l-lg last:rounded-r-lg border-y border-default first:border-l last:border-r',
           td: 'border-b border-default',
-          separator: 'h-0'
+          separator: 'h-0',
         }"
       />
 
-      <div class="flex items-center justify-between gap-3 border-t border-default pt-4 mt-auto">
+      <div
+        class="flex items-center justify-between gap-3 border-t border-default pt-4 mt-auto"
+      >
         <div class="text-sm text-muted">
-          {{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }} of
-          {{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} row(s) selected.
+          {{
+            table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0
+          }}
+          از {{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} ردیف
+          انتخاب شده.
         </div>
 
         <div class="flex items-center gap-1.5">
           <UPagination
-            :default-page="(table?.tableApi?.getState().pagination.pageIndex || 0) + 1"
+            :default-page="
+              (table?.tableApi?.getState().pagination.pageIndex || 0) + 1
+            "
             :items-per-page="table?.tableApi?.getState().pagination.pageSize"
             :total="table?.tableApi?.getFilteredRowModel().rows.length"
             @update:page="(p: number) => table?.tableApi?.setPageIndex(p - 1)"
