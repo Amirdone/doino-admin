@@ -3,6 +3,7 @@ import { formatTimeAgo } from "@vueuse/core";
 import type { Notification } from "~/types";
 
 const { isNotificationsSlideoverOpen } = useDashboard();
+const { formatJalali } = useJalaliDate();
 
 const { data: notifications } = await useFetch<Notification[]>(
   "/api/notifications"
@@ -38,6 +39,7 @@ const { data: notifications } = await useFetch<Notification[]>(
             <time
               :datetime="notification.date"
               class="text-muted text-xs"
+              :title="formatJalali(notification.date, 'jYYYY/jMM/jDD HH:mm')"
               v-text="formatTimeAgo(new Date(notification.date))"
             />
           </p>
